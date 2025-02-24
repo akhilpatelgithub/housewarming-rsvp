@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Housewarming RSVP</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+            color: #333;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        header h1 {
+            color: #d9534f;
+            font-size: 2rem;
+        }
+
+        header p {
+            font-size: 1.2rem;
+        }
+
+        .event-details {
+            background-color: #f1f1f1;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+
+        .rsvp-form {
+            background-color: #f9f9f9;
+            padding: 20px;
+            border-radius: 5px;
+        }
+
+        .rsvp-form label {
+            font-size: 1.1rem;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .rsvp-form input,
+        .rsvp-form textarea {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 12px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+
+        .rsvp-form button {
+            background-color: #d9534f;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .rsvp-form button:hover {
+            background-color: #c9302c;
+        }
+
+        .confirmation {
+            text-align: center;
+            padding: 20px;
+            background-color: #dff0d8;
+            border-radius: 5px;
+        }
+
+        .confirmation h2 {
+            font-size: 1.8rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>You're Invited to Our Housewarming!</h1>
+            <p>Come join us to celebrate our new home!</p>
+        </header>
+
+        <section class="event-details">
+            <p><strong>Date:</strong> March 9th, 10 AM</p>
+            <p><strong>Location:</strong> 3067 White Peach Rd, Elgin, SC 29045</p>
+        </section>
+
+        <section class="rsvp-form">
+            <h2>RSVP</h2>
+            <form id="rsvp-form">
+                <label for="name">Your Name:</label>
+                <input type="text" id="name" name="name" required>
+                
+                <label for="guests">Number of Guests:</label>
+                <input type="number" id="guests" name="guests" required>
+                
+                <label for="message">Additional Message (optional):</label>
+                <textarea id="message" name="message"></textarea>
+
+                <button type="submit">Submit RSVP</button>
+            </form>
+        </section>
+
+        <section class="confirmation" style="display: none;">
+            <h2>Thank You for Your RSVP!</h2>
+            <p>We look forward to celebrating with you.</p>
+        </section>
+    </div>
+
+    <script>
+        document.getElementById('rsvp-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            // Get the form data
+            const name = document.getElementById('name').value;
+            const guests = document.getElementById('guests').value;
+            const message = document.getElementById('message').value;
+
+            // Send the data to Google Sheets using the Web App URL
+            const url = 'https://script.google.com/u/0/home/projects/16fCn5wQjYr0nAPe0H30l0vN7Alr-8reJT2iTmy6-HzKSRXESwriwoNhD/edit';  // Replace with your Google Apps Script URL
+            const params = new URLSearchParams();
+            params.append('name', name);
+            params.append('guests', guests);
+            params.append('message', message);
+
+            fetch(url, {
+                method: 'POST',
+                body: params
+            })
+            .then(response => {
+                if (response.ok) {
+                    document.querySelector('.rsvp-form').style.display = 'none';
+                    document.querySelector('.confirmation').style.display = 'block';
+                } else {
+                    alert('There was an error. Please try again.');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        });
+    </script>
+</body>
+</html>
